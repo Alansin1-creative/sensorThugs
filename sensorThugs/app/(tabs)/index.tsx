@@ -4,6 +4,8 @@ import { Accelerometer } from "expo-sensors";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
 export default function Index() {
   const [desbloqueado, setDesbloqueado] = useState(false);
 
@@ -13,8 +15,13 @@ export default function Index() {
 
   // enviar evento a mongo
   const enviarEvento = async () => {
+    if (!API_URL) {
+      console.log("EXPO_PUBLIC_API_URL no está definida");
+      return;
+    }
+
     try {
-      await fetch("http://192.168.100.4:3000/evento", {
+      await fetch(`${API_URL}/evento`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,7 +31,7 @@ export default function Index() {
         }),
       });
     } catch (error) {
-      console.log("Error enviando");
+      console.log("Error enviando", error);
     }
   };
 

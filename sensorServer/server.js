@@ -12,13 +12,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
-// Conexión a MongoDB Compass
-mongoose.connect("mongodb://127.0.0.1:27017/sensorThugs", {
+// Conexión a MongoDB Atlas (se lee desde la variable de entorno MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 // Modelo para guardar eventos
 const EventoSchema = new mongoose.Schema({
@@ -28,13 +26,9 @@ const EventoSchema = new mongoose.Schema({
 
 const Evento = mongoose.model("Evento", EventoSchema);
 
-
-
 // Ruta para guardar evento
 app.post("/evento", async (req, res) => {
-
   try {
-
     const nuevoEvento = new Evento({
       evento: req.body.evento,
       fecha: new Date(),
@@ -43,18 +37,14 @@ app.post("/evento", async (req, res) => {
     await nuevoEvento.save();
 
     res.send("Evento guardado");
-
   } catch (error) {
-
+    console.error(error);
     res.status(500).send("Error");
-
   }
-
 });
 
-
-
-// Iniciar servidor
-app.listen(3000, () => {
-  console.log("Servidor corriendo en puerto 3000");
+// Iniciar servidor (Railway asigna el puerto en process.env.PORT)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Servidor corriendo en puerto " + PORT);
 });
