@@ -6,5 +6,5 @@
 [build]
   base = "sensorThugs"
   command = "npx expo export --platform web"
-  publish = "dist"
+  publish = "sensorThugs/dist"
 
